@@ -1573,7 +1573,9 @@ namespace{
 			}
 		}
 
-		if(
+		constexpr bool enable_stall = true;
+
+		if(enable_stall && 
 			!forward_can_stall_at_node(
 				popped_node,
 				backward_first_out, backward_head, backward_weight,
@@ -1621,6 +1623,21 @@ namespace{
 
 
 
+}
+
+ContractionHierarchyQuery& ContractionHierarchyQuery::plain_run(){
+	assert(ch && "query object must have an attached CH");
+	assert(!forward_queue.empty() && "must add at least one source before calling run");
+	assert(!backward_queue.empty() && "must add at least one target before calling run");
+	assert(state == ContractionHierarchyQuery::InternalState::initialized);
+
+	unsigned shortest_path_length = inf_weight;
+	std::priority_queue<pair<unsigned, unsigned>> pq;
+
+	while(!forward_queue.empty() || ) {
+		auto [d, u] = pq.top();
+		if()
+	}
 }
 
 ContractionHierarchyQuery& ContractionHierarchyQuery::run(){

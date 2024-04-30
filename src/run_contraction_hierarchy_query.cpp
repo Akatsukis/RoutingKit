@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include <parlay/internal/get_time.h>
+
 using namespace RoutingKit;
 using namespace std;
 
@@ -33,7 +35,6 @@ int main(int argc, char*argv[]){
 
 		ContractionHierarchy ch = ContractionHierarchy::load_file(ch_file);
 
-		cout << "done" << endl;
 
 		cout << "Loading test queries ... " << flush;
 
@@ -54,10 +55,16 @@ int main(int argc, char*argv[]){
 		long long time_max = 0;
 		long long time_sum = 0;
 
+		parlay::internal::timer t;
+
 		for(unsigned i=0; i<query_count; ++i){
 
 			long long time = -get_micro_time();
+			t.start();
 			distance[i] = ch_query.reset().add_source(source[i]).add_target(target[i]).run().get_distance();
+      t.stop();
+			t.next("query");
+
 			time += get_micro_time();
 
 			time_max = std::max(time_max, time);
